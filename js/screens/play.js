@@ -3,6 +3,10 @@ game.PlayScreen = me.ScreenObject.extend({
 	 *  action to perform on state change
 	 */
 	onResetEvent: function() {
+
+		// did someone say boats?
+		me.levelDirector.loadLevel('lolboats');
+
 		// reset the score
 		game.data.score = 0;
 

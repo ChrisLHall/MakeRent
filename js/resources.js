@@ -5,6 +5,9 @@ game.resources = [
 	 * {name: "example", type:"image", src: "data/img/example.png"},
 	 */
 
+	 {name: "test-tileset", type:"image", src: "data/img/test-tileset.png"},
+	 {name: "gripe_run_right", type:"image", src: "data/img/gripe_run_right.png"},
+
 	/* Atlases 
 	 * @example
 	 * {name: "example_tps", type: "tps", src: "data/img/example_tps.json"},
@@ -15,6 +18,8 @@ game.resources = [
 	 * {name: "example01", type: "tmx", src: "data/map/example01.tmx"},
 	 * {name: "example01", type: "tmx", src: "data/map/example01.json"},
  	 */
+
+ 	 {name: "lolboats", type: "tmx", src: "data/map/lolboats.tmx"}
 
 	/* Background music. 
 	 * @example
