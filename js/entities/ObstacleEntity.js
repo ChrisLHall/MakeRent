@@ -16,8 +16,7 @@ game.ObstacleEntity = me.Entity.extend({
             image: "obstacles",
             name: "obstacle",
             spritewidth: 32,
-            spriteheight: 32,
-            type: "solid"
+            spriteheight: 32
         };
 
         // call the constructor
