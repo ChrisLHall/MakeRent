@@ -4,7 +4,7 @@ game.PlayScreen = me.ScreenObject.extend({
 	 */
 	onResetEvent: function() {
 
-		// did someone say boats?
+		// did someone say boats? <-- lol nice one
 		me.levelDirector.loadLevel('lolboats');
 
 		// reset the score
@@ -13,6 +13,9 @@ game.PlayScreen = me.ScreenObject.extend({
 		// add our HUD to the game world
 		this.HUD = new game.HUD.Container();
 		me.game.world.addChild(this.HUD);
+
+        // TODO REMOVE
+        me.game.world.addChild(new game.ObstacleEntity(100, 100));
 	},
 
 
