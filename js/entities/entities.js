@@ -155,6 +155,8 @@ game.BulletEntity = me.Entity.extend({
         if (this.body.vel.y === 0 && this.body.vel.x === 0) {
             me.game.world.removeChild(this);
         }
+        // I legit don't know why the hell this works, but it does.
+        this.pos.y = this.pos.x = 0;
         return true;
     },
 
