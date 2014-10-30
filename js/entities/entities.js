@@ -31,7 +31,6 @@ game.PlayerEntity = me.Entity.extend({
     /** Collision event function, where E is the me.collision.ResponseObject. */
     onCollision: function (e) {
         if (e) {
-            console.log(e);
             if (e.b.name == "obstacle") {
                 var vec = e.overlapV.clone().negateSelf();
                 this.pos.add(vec);
@@ -104,7 +103,7 @@ game.PlayerEntity = me.Entity.extend({
         if (this.body.vel.x != 0 || this.body.vel.y != 0) {
             this._super(me.Entity, 'update', [dt]);
         }
-     
+
         // else inform the engine we did not perform
         // any update (e.g. position, animation)
         return false;
@@ -118,8 +117,8 @@ game.BulletEntity = me.Entity.extend({
         settings.spritewidth = settings.width = 20;
         settings.spriteheight = settings.height = 14;
         this._super(me.Entity, 'init', [x, y, settings]);
-        this.body.addShape(new me.Rect(x, y, 0,0));
-        this.z = 3;
+        this.body.addShape(new me.Rect(x, y, this.width, this.height));
+        this.z = 4;
         this.body.gravity = 0;
 
         switch (dir) {
@@ -152,6 +151,16 @@ game.BulletEntity = me.Entity.extend({
 
     update: function(dt) {
         this.body.update(dt);
+        me.collision.check(this, true, this.collideHandler.bind(this), true);
+        if (this.body.vel.y === 0 && this.body.vel.x === 0) {
+            me.game.world.removeChild(this);
+        }
         return true;
+    },
+
+    collideHandler : function (response) {
+        if (response.b.name !== 'mainplayer') {
+            me.game.world.removeChild(this);
+        }
     }
 });
