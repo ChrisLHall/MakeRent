@@ -43,11 +43,16 @@ var game = {
 		me.state.set(me.state.PLAY, new game.PlayScreen());
 
 		me.pool.register("mainplayer", game.PlayerEntity);
+		me.pool.register("bullets", game.BulletEntity);
 
-		me.input.bindKey(me.input.KEY.LEFT, "left");
-		me.input.bindKey(me.input.KEY.RIGHT, "right");
-		me.input.bindKey(me.input.KEY.UP, "up");
-		me.input.bindKey(me.input.KEY.DOWN, "down");
+		me.input.bindKey(me.input.KEY.A, "left");
+		me.input.bindKey(me.input.KEY.D, "right");
+		me.input.bindKey(me.input.KEY.W, "up");
+		me.input.bindKey(me.input.KEY.S, "down");
+		me.input.bindKey(me.input.KEY.UP, "fireup");
+		me.input.bindKey(me.input.KEY.DOWN, "firedown");
+		me.input.bindKey(me.input.KEY.LEFT, "fireleft");
+		me.input.bindKey(me.input.KEY.RIGHT, "fireright");
 		// Start the game.
 		me.state.change(me.state.PLAY);
 	}

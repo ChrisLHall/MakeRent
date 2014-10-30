@@ -7,6 +7,7 @@ game.resources = [
 
 	 {name: "test-tileset", type:"image", src: "data/img/test-tileset.png"},
 	 {name: "gripe_run_right", type:"image", src: "data/img/gripe_run_right.png"},
+	 {name: "bill_left", type:"image", src: "data/img/bill_left.png"},
 
 	/* Atlases 
 	 * @example
