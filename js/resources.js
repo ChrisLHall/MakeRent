@@ -5,9 +5,11 @@ game.resources = [
 	 * {name: "example", type:"image", src: "data/img/example.png"},
 	 */
 
-	 {name: "test-tileset", type:"image", src: "data/img/test-tileset.png"},
-	 {name: "gripe_run_right", type:"image", src: "data/img/gripe_run_right.png"},
-	 {name: "bill_left", type:"image", src: "data/img/bill_left.png"},
+	{name: "bill_left", type:"image", src: "data/img/bill_left.png"},
+	{name: "test-tileset", type:"image", src: "data/img/test-tileset.png"},
+    {name: "collisionTiles", type:"image", src: "data/img/collisionTiles.png"},
+	{name: "gripe_run_right", type:"image", src: "data/img/gripe_run_right.png"},
+    {name: "obstacles", type:"image", src: "data/img/obstacles.png"},
 
 	/* Atlases 
 	 * @example

@@ -12,6 +12,10 @@ game.PlayerEntity = me.Entity.extend({
     init: function(x, y, settings) {
         // call the constructor
         this._super(me.Entity, 'init', [x, y, settings]);
+        this.body.setCollisionMask(me.collision.types.WORLD_SHAPE
+                | me.collision.types.ENEMY_OBJECT
+                | me.collision.types.COLLECTABLE_OBJECT);
+        this.body.onCollision = this.onCollision.bind(this);
  
         // ensure the player is updated even when outside of the viewport
         this.alwaysUpdate = true;
@@ -23,6 +27,19 @@ game.PlayerEntity = me.Entity.extend({
     resetFire: function() {
             this.canFire = true;
         },
+
+    /** Collision event function, where E is the me.collision.ResponseObject. */
+    onCollision: function (e) {
+        if (e) {
+            console.log(e);
+            if (e.b.name == "obstacle") {
+                var vec = e.overlapV.clone().negateSelf();
+                this.pos.add(vec);
+                // THE NEXT LINE IS SOOOOO FUCKING IMPORTANT YOU DONT EVEN KNOW
+                this.updateBounds();
+            }
+        }
+    },
  
     /* -----
  
@@ -30,7 +47,6 @@ game.PlayerEntity = me.Entity.extend({
  
     ------ */
     update: function(dt) {
- 
         if (me.input.isKeyPressed('left')) {
             // flip the sprite on horizontal axis
             this.flipX(true);
@@ -82,13 +98,11 @@ game.PlayerEntity = me.Entity.extend({
         }
  
         // check & update player movement
-        
+        this.body.update(dt);
+        var collided = me.collision.check(this, true, this.onCollision.bind(this), true);
  
-        // update animation if necessary
-        if (this.body.vel.x!=0 || this.body.vel.y!=0) {
-            // update object animation
+        if (this.body.vel.x != 0 || this.body.vel.y != 0) {
             this._super(me.Entity, 'update', [dt]);
-            return true;
         }
      
         // else inform the engine we did not perform
