@@ -80,15 +80,15 @@ game.EnemyEntity = me.Entity.extend({
     },
 
     keepInBounds: function() {
-        if (this.pos.x < me.game.viewport.minX) {
-            this.pos.x = me.game.viewport.minX;
-        } else if (this.pos.x > me.game.viewport.maxX - this.spritewidth) {
-            this.pos.x = me.game.viewport.maxX;
+        if (this.pos.x < me.game.viewport.pos.x) {
+            this.pos.x = me.game.viewport.pos.x;
+        } else if (this.pos.x > me.game.viewport.hWidth - this.spritewidth) {
+            this.pos.x = me.game.viewport.hWidth - this.spritewidth;
         }
-        if (this.pos.y < me.game.viewport.minY) {
-            this.pos.y = me.game.viewport.minY;
-        } else if (this.pos.y > me.game.viewport.maxY - this.spriteheight) {
-            this.pos.y = me.game.viewport.maxY;
+        if (this.pos.y < me.game.viewport.pos.y) {
+            this.pos.y = me.game.viewport.pos.y;
+        } else if (this.pos.y > me.game.viewport.hHeight - this.spriteheight) {
+            this.pos.y = me.game.viewport.hHeight - this.spriteheight;
         }
         this.updateBounds()
     }
