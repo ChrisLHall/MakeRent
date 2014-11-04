@@ -8,6 +8,7 @@ game.resources = [
 	{name: "test-tileset", type:"image", src: "data/img/test-tileset.png"},
     {name: "collisionTiles", type:"image", src: "data/img/collisionTiles.png"},
 	{name: "gripe_run_right", type:"image", src: "data/img/gripe_run_right.png"},
+    {name: "enemy_right", type:"image", src: "data/img/enemy_right.png"},
     {name: "obstacles", type:"image", src: "data/img/obstacles.png"},
 
 	/* Atlases 

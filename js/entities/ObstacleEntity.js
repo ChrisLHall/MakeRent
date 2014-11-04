@@ -9,20 +9,23 @@ game.ObstacleEntity = me.Entity.extend({
  
     ------ */
  
-    init: function(x, y) {
-        settings = {
-            width: 32,
-            height: 32,
-            image: "obstacles",
-            name: "obstacle",
-            spritewidth: 32,
-            spriteheight: 32
-        };
+    init: function(x, y, settings) {
+        if (!settings) {
+            settings = {
+                    width: 32,
+                    height: 32,
+                    image: "obstacles",
+                    name: "obstacle",
+                    spritewidth: 32,
+                    spriteheight: 32
+            };
+            this._super(me.Entity, 'init', [x, y, settings]);
+            this.z = 3;
+            this.body.addShape(new me.Rect(x, y, this.width, this.height));
+        } else {
+            this._super(me.Entity, 'init', [x, y, settings]);
+        }
 
-        // call the constructor
-        this._super(me.Entity, 'init', [x, y, settings]);
-        this.z = 3;
-        this.body.addShape(new me.Rect(x, y, this.width, this.height));
         this.body.collisionType = me.collision.types.WORLD_SHAPE;
         this.body.setCollisionMask(me.collision.types.PLAYER_OBJECT
                 | me.collision.types.ENEMY_OBJECT);

@@ -10,8 +10,18 @@ game.PlayerEntity = me.Entity.extend({
     ------ */
  
     init: function(x, y, settings) {
+        // Default value for settings.
+        settings = settings || {
+            width: 32,
+            height: 32,
+            image: "gripe_run_right",
+            name: "mainplayer",
+            spritewidth: 32,
+            spriteheight: 32
+        };
         // call the constructor
         this._super(me.Entity, 'init', [x, y, settings]);
+        this.body.collisionType = me.collision.types.PLAYER_OBJECT;
         this.body.setCollisionMask(me.collision.types.WORLD_SHAPE
                 | me.collision.types.ENEMY_OBJECT
                 | me.collision.types.COLLECTABLE_OBJECT);
@@ -25,7 +35,6 @@ game.PlayerEntity = me.Entity.extend({
     /** Collision event function, where E is the me.collision.ResponseObject. */
     onCollision: function (e) {
         if (e) {
-            console.log(e);
             if (e.b.name == "obstacle") {
                 var vec = e.overlapV.clone().negateSelf();
                 this.pos.add(vec);
