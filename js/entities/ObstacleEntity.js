@@ -1,6 +1,4 @@
-/*------------------- 
-a player entity
--------------------------------- */
+/** Generic obstacle object. */
 game.ObstacleEntity = me.Entity.extend({
  
     /* -----

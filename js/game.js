@@ -5,10 +5,20 @@ var game = {
 	// an object where to store game information
 	data : {
 		// score
-		score : 0
+		// Interact with this through the StateManager, values are otherwise
+		// read-only
+		score : 0,
+        stateManager : null,
+		depression : 0,
+		baseDepression : 0,
+		DEPRESSION_TIME_CONST : 4.0,
+		DEPRESSION_THRESHOLD : 0.01,
+		money : 0,
+		job : "none",
+		incomeMult : 1.0
 	},
-	
-	
+
+
 	// Run on page load.
 	"onload" : function () {
 	// Initialize the video.

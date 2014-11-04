@@ -14,6 +14,10 @@ game.PlayScreen = me.ScreenObject.extend({
 		this.HUD = new game.HUD.Container();
 		me.game.world.addChild(this.HUD);
 
+        game.data.stateManager = new game.StateManager();
+        game.data.stateManager.setPlayer(me.game.world.getChildByName("mainplayer")[0]);
+        me.game.world.addChild(game.data.stateManager);
+
         // TODO REMOVE
         me.game.world.addChild(new game.ObstacleEntity(100, 100));
         me.game.world.addChild(new game.EnemyEntity(100, 120));
