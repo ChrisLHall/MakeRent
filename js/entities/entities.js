@@ -12,12 +12,12 @@ game.PlayerEntity = me.Entity.extend({
     init: function(x, y, settings) {
         // Default value for settings.
         settings = settings || {
-            width: 32,
-            height: 32,
-            image: "gripe_run_right",
+            width: 28,
+            height: 28,
+            image: "master",
             name: "mainplayer",
-            spritewidth: 32,
-            spriteheight: 32
+            spritewidth: 28,
+            spriteheight: 28
         };
         // call the constructor
         this._super(me.Entity, 'init', [x, y, settings]);
@@ -26,6 +26,9 @@ game.PlayerEntity = me.Entity.extend({
                 | me.collision.types.ENEMY_OBJECT
                 | me.collision.types.COLLECTABLE_OBJECT);
         this.body.onCollision = this.onCollision.bind(this);
+
+        this.renderable.addAnimation("walk", [32, 33]);
+        this.renderable.setCurrentAnimation("walk");
 
         // ensure the player is updated even when outside of the viewport
         this.alwaysUpdate = true;
@@ -84,25 +87,25 @@ game.PlayerEntity = me.Entity.extend({
         // fire if ready and button pressed
         if (me.input.isKeyPressed('fireleft') && this.canFire) {
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x/2 + 5, this.pos.y/2 + 5, {}, "left"));
+            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "left"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
         } else if (me.input.isKeyPressed('fireright') && this.canFire) {
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x/2 + 5, this.pos.y/2 + 5, {}, "right"));
+            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "right"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
         } else if (me.input.isKeyPressed('fireup') && this.canFire) {
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x/2 + 5, this.pos.y/2 + 5, {}, "up"));
+            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "up"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
         } else if (me.input.isKeyPressed('firedown') && this.canFire) {
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x/2 + 5, this.pos.y/2 + 5, {}, "down"));
+            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "down"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
@@ -122,6 +125,8 @@ game.PlayerEntity = me.Entity.extend({
     }
 });
 
+
+
 /* Bullet Entity */
 game.BulletEntity = me.Entity.extend({
     init: function(x, y, settings, dir) {
@@ -129,10 +134,10 @@ game.BulletEntity = me.Entity.extend({
         settings.spritewidth = settings.width = 20;
         settings.spriteheight = settings.height = 14;
         this._super(me.Entity, 'init', [x, y, settings]);
-        this.body.addShape(new me.Rect(x, y, this.width, this.height));
+        this.body.addShape(new me.Rect(0, 0, this.width, this.height));
         this.z = 4;
 
-this.body.collisionType = me.collision.types.PLAYER_OBJECT;
+        this.body.collisionType = me.collision.types.PLAYER_OBJECT;
         this.body.setCollisionMask(me.collision.types.WORLD_SHAPE
                 | me.collision.types.ENEMY_OBJECT);
 
@@ -172,8 +177,6 @@ this.body.collisionType = me.collision.types.PLAYER_OBJECT;
         if (this.body.vel.y === 0 && this.body.vel.x === 0) {
             me.game.world.removeChild(this);
         }
-        // I legit don't know why the hell this works, but it does.
-        this.pos.y = this.pos.x = 0;
         return true;
     },
 

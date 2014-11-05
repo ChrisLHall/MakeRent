@@ -19,7 +19,7 @@ game.ObstacleEntity = me.Entity.extend({
             };
             this._super(me.Entity, 'init', [x, y, settings]);
             this.z = 3;
-            this.body.addShape(new me.Rect(x, y, this.width, this.height));
+            this.body.addShape(new me.Rect(0, 0, this.width, this.height));
         } else {
             this._super(me.Entity, 'init', [x, y, settings]);
         }
