@@ -9,6 +9,7 @@ var game = {
 		// read-only
 		score : 0,
         stateManager : null,
+		gameplayManager : null,
 		depression : 0,
 		baseDepression : 0,
 		DEPRESSION_TIME_CONST : 4.0,
@@ -16,6 +17,16 @@ var game = {
 		money : 0,
 		job : "none",
 		incomeMult : 1.0
+	},
+	resetData : function() {
+		this.data.score = 0;
+		this.data.stateManager = null;
+		this.data.gameplayManager = null;
+		this.data.depression = 0;
+		this.data.baseDepression = 0;
+		this.data.money = 0;
+		this.data.job = "none";
+		this.data.incomeMult = 1.0;
 	},
 
 

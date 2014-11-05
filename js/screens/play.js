@@ -4,19 +4,21 @@ game.PlayScreen = me.ScreenObject.extend({
 	 */
 	onResetEvent: function() {
 
-		// did someone say boats? <-- lol nice one
+		// did someone say goats??
 		me.levelDirector.loadLevel('lolboats');
 
-		// reset the score
-		game.data.score = 0;
+		game.resetData();
 
 		// add our HUD to the game world
 		this.HUD = new game.HUD.Container();
 		me.game.world.addChild(this.HUD);
+		me.game.world.addChild(new game.ScrollingBg("bg1"));
 
         game.data.stateManager = new game.StateManager();
         game.data.stateManager.setPlayer(me.game.world.getChildByName("mainplayer")[0]);
         me.game.world.addChild(game.data.stateManager);
+		game.data.gameplayManager = new game.GameplayManager();
+		me.game.world.addChild(game.data.gameplayManager);
 
         // TODO REMOVE
         me.game.world.addChild(new game.ObstacleEntity(100, 100));

@@ -1,12 +1,12 @@
 /** Generic obstacle object. */
 game.ObstacleEntity = me.Entity.extend({
- 
+
     /* -----
- 
+
     constructor
- 
+
     ------ */
- 
+
     init: function(x, y, settings) {
         if (!settings) {
             settings = {
@@ -31,21 +31,33 @@ game.ObstacleEntity = me.Entity.extend({
         // Set the animation frame based on mood
         this.renderable.animationpause = true;
         this.renderable.setAnimationFrame(2);
- 
+
         // ensure the player is updated even when outside of the viewport
         this.alwaysUpdate = true;
         this.body.gravity = 0;
     },
- 
+
+    /** Update the animation frame based on the game's depression. */
+    updateImage: function() {
+        // Scale from -1..1 to 0..5
+        var frame = Math.floor((game.data.depression + 1.0) * 5.0 / 2.0);
+        frame = Math.max(0, Math.min(4, frame));
+        if (this.renderable.getCurrentAnimationFrame() != frame) {
+            this.renderable.setAnimationFrame(frame);
+            return true;
+        }
+        return false;
+    },
+
     /** Update the block's animation frame based on mood. Destroy it if it is
      out of bounds. */
     update: function(dt) {
         updated = false;
         // check & update player movement
         this.body.update(dt);
- 
-        //updated = updated || this._super(me.Entity, 'update', [dt]);
-        updated = this._super(me.Entity, 'update', [dt]);
+
+        updated = this.updateImage();
+        updated = updated || this._super(me.Entity, 'update', [dt]);
         if (this.body.pos.x < -this.body.width) {
             // TODO: Destroy this
             updated = true;

@@ -1,14 +1,14 @@
-/*------------------- 
+/*-------------------
 a player entity
 -------------------------------- */
 game.PlayerEntity = me.Entity.extend({
- 
+
     /* -----
- 
+
     constructor
- 
+
     ------ */
- 
+
     init: function(x, y, settings) {
         // Default value for settings.
         settings = settings || {
@@ -26,12 +26,14 @@ game.PlayerEntity = me.Entity.extend({
                 | me.collision.types.ENEMY_OBJECT
                 | me.collision.types.COLLECTABLE_OBJECT);
         this.body.onCollision = this.onCollision.bind(this);
- 
+
         // ensure the player is updated even when outside of the viewport
         this.alwaysUpdate = true;
         this.body.gravity = 0;
         this.canFire = true;
         this.lastFire = 0;
+
+        this.SPEED = 2;
     },
 
     resetFire: function() {
@@ -49,30 +51,30 @@ game.PlayerEntity = me.Entity.extend({
             }
         }
     },
- 
+
     /* -----
- 
+
     update the player pos
- 
+
     ------ */
     update: function(dt) {
         if (me.input.isKeyPressed('left')) {
             // flip the sprite on horizontal axis
             this.flipX(true);
             // update the entity velocity
-            this.body.vel.x = -3;
+            this.body.vel.x = -this.SPEED;
         } else if (me.input.isKeyPressed('right')) {
             // unflip the sprite
             this.flipX(false);
             // update the entity velocity
-            this.body.vel.x = 3;
+            this.body.vel.x = this.SPEED;
         } else {
         	this.body.vel.x = 0;
         }
         if (me.input.isKeyPressed('up')) {
-         	this.body.vel.y = -3;
+         	this.body.vel.y = -this.SPEED;
         } else if (me.input.isKeyPressed('down')) {
-        	this.body.vel.y = 3;
+        	this.body.vel.y = this.SPEED;
         } else {
         	this.body.vel.y = 0;
         };
@@ -105,11 +107,11 @@ game.PlayerEntity = me.Entity.extend({
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
         }
- 
+
         // check & update player movement
         this.body.update(dt);
         var collided = me.collision.check(this, true, this.onCollision.bind(this), true);
- 
+
         if (this.body.vel.x != 0 || this.body.vel.y != 0) {
             this._super(me.Entity, 'update', [dt]);
         }
@@ -129,6 +131,11 @@ game.BulletEntity = me.Entity.extend({
         this._super(me.Entity, 'init', [x, y, settings]);
         this.body.addShape(new me.Rect(x, y, this.width, this.height));
         this.z = 4;
+
+this.body.collisionType = me.collision.types.PLAYER_OBJECT;
+        this.body.setCollisionMask(me.collision.types.WORLD_SHAPE
+                | me.collision.types.ENEMY_OBJECT);
+
         this.body.gravity = 0;
 
         switch (dir) {
@@ -156,7 +163,7 @@ game.BulletEntity = me.Entity.extend({
             /*case "upright":
                 this.body.setVelocity(Math.sqrt(2), -1 * Math.sqrt(2));
                 break;*/
-        } 
+        }
     },
 
     update: function(dt) {
@@ -171,8 +178,11 @@ game.BulletEntity = me.Entity.extend({
     },
 
     collideHandler : function (response) {
-        if (response.b.name !== 'mainplayer') {
+        if (response.b.name == 'enemy') {
             me.game.world.removeChild(this);
+            // TODO MAKE THIS WORK
+            response.b.hitPoints -= 1;
+            console.log("Ouch! Enemy HP: " + response.b.hitPoints.toString());
         }
     }
 });
