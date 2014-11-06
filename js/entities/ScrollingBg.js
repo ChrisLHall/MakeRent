@@ -1,6 +1,7 @@
 /** HUD icon representing emotion. */
 game.ScrollingBg = me.Sprite.extend({
     init: function(imageName) {
+        this.name = "ScrollingBg";
         this._super(me.Sprite, 'init', [0, 0, me.loader.getImage(imageName),
                 me.game.viewport.width * 2, me.game.viewport.height]);
         this.z = -Infinity;

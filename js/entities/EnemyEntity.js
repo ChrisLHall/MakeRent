@@ -4,12 +4,12 @@ game.EnemyEntity = me.Entity.extend({
     init: function(x, y, settings) {
         // Default value for settings.
         settings = settings || {
-                width: 28,
-                height: 28,
+                width: 33,
+                height: 33,
                 image: "master",
                 name: "enemy",
-                spritewidth: 28,
-                spriteheight: 28
+                spritewidth: 33,
+                spriteheight: 33
         };
         this._super(me.Entity, 'init', [x, y, settings]);
         this.z = 4;
@@ -18,8 +18,9 @@ game.EnemyEntity = me.Entity.extend({
             this.body.addShape(new me.Rect(0, 0, this.width, this.height));
         }
         this.body.collisionType = me.collision.types.ENEMY_OBJECT;
-        this.body.setCollisionMask(me.collision.types.WORLD_SHAPE
-                | me.collision.types.PLAYER_OBJECT);
+        this.body.setCollisionMask(me.collision.types.NPC_OBJECT
+                | me.collision.types.PLAYER_OBJECT
+                | me.collision.types.PROJECTILE_OBJECT);
         this.body.onCollision = this.onCollision.bind(this);
 
         this.renderable.addAnimation("walk", [0, 1]);
@@ -38,26 +39,34 @@ game.EnemyEntity = me.Entity.extend({
 
     /** Collision event function, where E is the me.collision.ResponseObject. */
     onCollision: function (e) {
-        if (e) {
-            if (e.b.name == "obstacle") {
-                var vec = e.overlapV.clone().negateSelf();
-                this.pos.add(vec);
-                this.updateBounds();
-            }
+        if (e.b.name == "obstacle") {
+            var vec = e.overlapV.clone().negateSelf();
+            this.pos.add(vec);
+            this.updateBounds();
         }
     },
 
     update: function(dt) {
+        this.keepInBounds();
         this.body.update(dt);
-        this.keepInBounds()
-        var collided = me.collision.check(this, true, this.onCollision.bind(this), true);
+        var collided = me.collision.check(this, true,
+                this.onCollision.bind(this), true);
 
         this._super(me.Entity, 'update', [dt]);
+
+        if (this.hitPoints <= 0 && this.alive) {
+            me.game.world.removeChild(this);
+            this.alive = false;
+            game.data.stateManager.addDepression(0.5);
+        }
 
         return true;
     },
 
     changeDir: function(startSpeed) {
+        if (!this.alive) {
+            return;
+        }
         // Choose the direction randomly from tuples. This is kind of stupid but
         // gets the job done.
         var directions = [
@@ -76,25 +85,29 @@ game.EnemyEntity = me.Entity.extend({
         console.log("Change dir! alive = " + choice.toString());
         this.body.vel.x = choice[0];
         this.body.vel.y = choice[1];
-        if (this.alive) {
-            me.timer.setTimeout(this.changeDir.bind(this),
-                    1000 + 500 * Math.random());
-        }
+        return me.timer.setTimeout(this.changeDir.bind(this),
+                1000 + 500 * Math.random());
     },
 
     keepInBounds: function() {
-        if (this.pos.x < me.game.viewport.pos.x) {
+        if (this.left < me.game.viewport.left) {
             this.pos.x = me.game.viewport.pos.x;
-        } else if (this.pos.x > me.game.viewport.pos.x
-                + me.game.viewport.width - this.spritewidth) {
-            this.pos.x = me.game.viewport.width - this.spritewidth;
+            this.body.vel.x = game.data.gameplayManager.SCROLL_SPEED;
+            this.updateBounds();
+        } else if (this.right > me.game.viewport.right) {
+            //If off-screen to the right, just walk left
+            this.body.vel.x = -this.SPEED;
+            this.body.vel.y = 0;
+            //this.pos.x = me.game.viewport.width - this.spritewidth;
         }
-        if (this.pos.y < me.game.viewport.pos.y) {
+        if (this.top < me.game.viewport.top) {
             this.pos.y = me.game.viewport.pos.y;
-        } else if (this.pos.y > me.game.viewport.pos.y
-                + me.game.viewport.height - this.spriteheight) {
-            this.pos.y = me.game.viewport.height - this.spriteheight;
+            this.body.vel.y = 0;
+            this.updateBounds();
+        } else if (this.bottom > me.game.viewport.bottom) {
+            this.pos.y = me.game.viewport.bottom - this.height;
+            this.body.vel.y = 0;
+            this.updateBounds();
         }
-        this.updateBounds()
     }
 });

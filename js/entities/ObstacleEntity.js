@@ -24,7 +24,7 @@ game.ObstacleEntity = me.Entity.extend({
             this._super(me.Entity, 'init', [x, y, settings]);
         }
 
-        this.body.collisionType = me.collision.types.WORLD_SHAPE;
+        this.body.collisionType = me.collision.types.NPC_OBJECT;
         this.body.setCollisionMask(me.collision.types.PLAYER_OBJECT
                 | me.collision.types.ENEMY_OBJECT);
 

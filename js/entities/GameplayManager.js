@@ -18,8 +18,34 @@ game.GameplayManager = me.Entity.extend({
         this.alwaysUpdate = true;
         this.body.gravity = 0;
         // TODO more testing
-        // jk this absolutely does not work
-        //this.body.vel.x = 0.1;
+        // jk this absolutely does not work...ok now maybe?
+        this.SCROLL_SPEED = 0.6;
+        this.body.vel.x = this.SCROLL_SPEED;
+        me.timer.setTimeout(this.spawn.bind(this), 3000);
+    },
+
+    spawn: function() {
+        var y1 = Math.floor(Math.random() * 15);
+        var y2 = Math.floor(Math.random() * 15);
+        while (y2 == y1) {
+            y2 = Math.floor(Math.random() * 15);
+        }
+        var y3 = Math.floor(Math.random() * 15);
+        while (y3 == y1 || y3 == y2) {
+            y3 = Math.floor(Math.random() * 15);
+        }
+        var y4 = Math.floor(Math.random() * 15);
+        while (y4 == y1 || y4 == y2 || y4 == y3) {
+            y4 = Math.floor(Math.random() * 15);
+        }
+
+        var x = me.game.viewport.right;
+        me.game.world.addChild(new game.ObstacleEntity(x, y1 * 32));
+        me.game.world.addChild(new game.ObstacleEntity(x, y2 * 32));
+        me.game.world.addChild(new game.EnemyEntity(x, y3 * 32));
+        me.game.world.addChild(new game.EnemyEntity(x, y4 * 32));
+
+        me.timer.setTimeout(this.spawn.bind(this), 3000);
     },
 
     /** Update the block's animation frame based on mood. Destroy it if it is
