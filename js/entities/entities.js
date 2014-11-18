@@ -50,7 +50,7 @@ game.PlayerEntity = me.Entity.extend({
 
     /** Collision event function, where E is the me.collision.ResponseObject. */
     onCollision: function (e) {
-        console.log(e);
+        //console.log(e);
         if (e.b.name == "obstacle") {
             var vec = e.overlapV.clone().negateSelf();
             this.pos.add(vec);
@@ -212,7 +212,7 @@ game.BulletEntity = me.Entity.extend({
             me.game.world.removeChild(this);
             // TODO MAKE THIS WORK
             response.b.hitPoints -= 1;
-            console.log("Ouch! Enemy HP: " + response.b.hitPoints.toString());
+            //console.log("Ouch! Enemy HP: " + response.b.hitPoints.toString());
         }
     }
 });

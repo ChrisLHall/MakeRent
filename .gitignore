@@ -2,3 +2,9 @@ build
 .DS_Store
 node_modules/
 npm-debug.log
+
+*.xcf
+
+*.sublime-project
+
+*.sublime-workspace

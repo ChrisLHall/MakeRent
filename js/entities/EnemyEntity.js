@@ -1,5 +1,9 @@
 /** The enemy. Can be created in a TMX or manually. */
+
+
 game.EnemyEntity = me.Entity.extend({
+
+    
     /** Constructor for enemies. Settings is optional. */
     init: function(x, y, settings) {
         // Default value for settings.
@@ -56,6 +60,8 @@ game.EnemyEntity = me.Entity.extend({
 
         if (this.hitPoints <= 0 && this.alive) {
             me.game.world.removeChild(this);
+            var money = new game.MoneyEntity(this.pos.x, this.pos.y, {})
+            me.game.world.addChild(money);
             this.alive = false;
             game.data.stateManager.addDepression(0.5);
         }
@@ -82,7 +88,7 @@ game.EnemyEntity = me.Entity.extend({
             choice = directions[Math.floor(Math.random() * 4)];
         }
 
-        console.log("Change dir! alive = " + choice.toString());
+        //console.log("Change dir! alive = " + choice.toString());
         this.body.vel.x = choice[0];
         this.body.vel.y = choice[1];
         return me.timer.setTimeout(this.changeDir.bind(this),

@@ -65,6 +65,7 @@ var game = {
 
 		me.pool.register("mainplayer", game.PlayerEntity);
 		me.pool.register("bullets", game.BulletEntity);
+		me.pool.register("money", game.MoneyEntity);
 
 		me.input.bindKey(me.input.KEY.A, "left");
 		me.input.bindKey(me.input.KEY.D, "right");
