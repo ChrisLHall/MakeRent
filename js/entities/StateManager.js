@@ -17,6 +17,10 @@ game.StateManager = me.Renderable.extend({
         game.data.depression = Math.max(-1.0, Math.min(1.0, game.data.depression + amount))
     },
 
+    subDepression: function(amount) {
+        game.data.depression = Math.max(-1.0, Math.min(1.0, game.data.depression - amount))
+    },
+
     update: function(dt) {
         game.data.depression = game.data.baseDepression
                 + (game.data.depression - game.data.baseDepression)

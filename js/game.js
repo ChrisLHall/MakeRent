@@ -8,6 +8,7 @@ var game = {
 		// Interact with this through the StateManager, values are otherwise
 		// read-only
 		score : 0,
+		playerPos: null,
         stateManager : null,
 		gameplayManager : null,
 		depression : 0,

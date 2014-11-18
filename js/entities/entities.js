@@ -110,29 +110,30 @@ game.PlayerEntity = me.Entity.extend({
 
         this.keepInBounds();
         this.body.update(dt);
+        game.data.playerPos = this.pos;
 
         // fire if ready and button pressed
         if (me.input.isKeyPressed('fireleft') && this.canFire) {
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "left"));
+            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "left", "player"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
         } else if (me.input.isKeyPressed('fireright') && this.canFire) {
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "right"));
+            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "right", "player"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
         } else if (me.input.isKeyPressed('fireup') && this.canFire) {
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "up"));
+            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "up", "player"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
         } else if (me.input.isKeyPressed('firedown') && this.canFire) {
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "down"));
+            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "down", "player"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
@@ -156,7 +157,7 @@ game.PlayerEntity = me.Entity.extend({
 
 /* Bullet Entity */
 game.BulletEntity = me.Entity.extend({
-    init: function(x, y, settings, dir) {
+    init: function(x, y, settings, dir, owner, vel) {
         settings.image = "bill_left";
         settings.spritewidth = settings.width = 20;
         settings.spriteheight = settings.height = 14;
@@ -169,6 +170,7 @@ game.BulletEntity = me.Entity.extend({
                 | me.collision.types.ENEMY_OBJECT);
 
         this.body.gravity = 0;
+        this.owner = owner;
 
         switch (dir) {
             case "right":
@@ -195,6 +197,10 @@ game.BulletEntity = me.Entity.extend({
             /*case "upright":
                 this.body.setVelocity(Math.sqrt(2), -1 * Math.sqrt(2));
                 break;*/
+            case "custom":
+                this.body.vel = vel;
+                break;
+            console.log(this.body.vel)
         }
     },
 
@@ -208,11 +214,14 @@ game.BulletEntity = me.Entity.extend({
     },
 
     collideHandler : function (response) {
-        if (response.b.name == 'enemy') {
+        if (response.b.name == 'enemy' && this.owner == "player") {
             me.game.world.removeChild(this);
             // TODO MAKE THIS WORK
             response.b.hitPoints -= 1;
             console.log("Ouch! Enemy HP: " + response.b.hitPoints.toString());
+        } else if (response.b.name == 'mainplayer' && this.owner == "enemy") {
+            console.log("YOU GOT HIT!!!!")
+            game.data.stateManager.subDepression(0.5);
         }
     }
 });

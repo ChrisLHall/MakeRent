@@ -34,6 +34,8 @@ game.EnemyEntity = me.Entity.extend({
         this.alwaysUpdate = true;
         this.body.gravity = 0;
         this.flipX(true);
+        this.canFire = true;
+        this.lastFire = 0;
 
         this.hitPoints = 3;
 
@@ -50,6 +52,10 @@ game.EnemyEntity = me.Entity.extend({
         }
     },
 
+    resetFire: function() {
+            this.canFire = true;
+        },
+
     update: function(dt) {
         this.keepInBounds();
         this.body.update(dt);
@@ -64,6 +70,15 @@ game.EnemyEntity = me.Entity.extend({
             me.game.world.addChild(money);
             this.alive = false;
             game.data.stateManager.addDepression(0.5);
+        }
+
+        if (this.canFire && game.data.playerPos) {
+            me.timer.clearTimeout(this.lastFire)
+            test = new me.Vector2d(game.data.playerPos.x - this.pos.x, game.data.playerPos.y - this.pos.y)
+            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "custom", "enemy", test.normalize().scale(10)));
+            this.canFire = false;
+            bullet = this;
+            this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 1000 + 1000 * Math.random());
         }
 
         return true;
