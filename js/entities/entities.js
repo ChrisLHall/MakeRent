@@ -212,7 +212,7 @@ game.BulletEntity = me.Entity.extend({
             me.game.world.removeChild(this);
             // TODO MAKE THIS WORK
             response.b.hitPoints -= 1;
-            //console.log("Ouch! Enemy HP: " + response.b.hitPoints.toString());
+            console.log("Ouch! Enemy HP: " + response.b.hitPoints.toString());
         }
     }
 });

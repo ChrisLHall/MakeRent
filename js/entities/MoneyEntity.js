@@ -19,6 +19,8 @@ game.MoneyEntity = me.Entity.extend({
 			this.body.setCollisionMask(me.collision.types.NO_OBJECT);
         	// remove it
         	me.game.world.removeChild(this);
+        	game.data.money += 1;
+        	console.log("Money Get: " + game.data.money + "$");
 		}
 		
 	}
