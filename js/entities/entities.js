@@ -207,7 +207,10 @@ game.BulletEntity = me.Entity.extend({
     update: function(dt) {
         this.body.update(dt);
         me.collision.check(this, true, this.collideHandler.bind(this), true);
-        if (this.body.vel.y === 0 && this.body.vel.x === 0) {
+        if (this.pos.x > me.game.viewport.right || 
+            this.pos.x < me.game.viewport.left || 
+            this.pos.y < me.game.viewport.top || 
+            this.pos.y > me.game.viewport.bottom) {
             me.game.world.removeChild(this);
         }
         return true;
