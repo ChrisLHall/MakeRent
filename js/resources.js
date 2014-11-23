@@ -7,6 +7,7 @@ game.resources = [
 
 	{name: "master", type:"image", src: "data/img/masterSpriteSheet.png"},
 	{name: "bill_left", type:"image", src: "data/img/bill_left.png"},
+	{name: "enemybullet", type:"image", src: "data/img/enemybullet.png"},
 	{name: "test-tileset", type:"image", src: "data/img/test-tileset.png"},
 	{name: "bg1", type:"image", src: "data/img/bg1.png"},
     {name: "collisionTiles", type:"image", src: "data/img/collisionTiles.png"},

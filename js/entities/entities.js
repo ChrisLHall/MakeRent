@@ -170,7 +170,11 @@ game.PlayerEntity = me.Entity.extend({
 /* Bullet Entity */
 game.BulletEntity = me.Entity.extend({
     init: function(x, y, settings, dir, owner, vel, moneyDamage, moodDamage) {
-        settings.image = "bill_left";
+        if (owner == "player") {
+            settings.image = "bill_left";
+        } else {
+            settings.image = "enemybullet";
+        }
         settings.spritewidth = settings.width = 20;
         settings.spriteheight = settings.height = 14;
         this._super(me.Entity, 'init', [x, y, settings]);
