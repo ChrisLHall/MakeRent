@@ -75,7 +75,7 @@ game.EnemyEntity = me.Entity.extend({
         if (this.canFire && game.data.playerPos) {
             me.timer.clearTimeout(this.lastFire)
             test = new me.Vector2d(game.data.playerPos.x - this.pos.x, game.data.playerPos.y - this.pos.y)
-            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "custom", "enemy", test.normalize().scale(10)));
+            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "custom", "enemy", test.normalize().scale(10), 1, .1));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 1000 + 1000 * Math.random());

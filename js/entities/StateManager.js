@@ -9,6 +9,10 @@ game.StateManager = me.Renderable.extend({
         this.player = null
     },
 
+    subMoney: function(amount) {
+        game.data.money = Math.max(0, game.data.money - amount);
+    },
+
     setPlayer: function(playerEntity) {
         this.player = playerEntity;
     },
@@ -18,7 +22,7 @@ game.StateManager = me.Renderable.extend({
     },
 
     subDepression: function(amount) {
-        game.data.depression = Math.max(-1.0, Math.min(1.0, game.data.depression - amount))
+        game.data.depression = Math.min(1.0, Math.max(-1.0, game.data.depression - amount))
     },
 
     update: function(dt) {

@@ -157,7 +157,7 @@ game.PlayerEntity = me.Entity.extend({
 
 /* Bullet Entity */
 game.BulletEntity = me.Entity.extend({
-    init: function(x, y, settings, dir, owner, vel) {
+    init: function(x, y, settings, dir, owner, vel, moneyDamage, moodDamage) {
         settings.image = "bill_left";
         settings.spritewidth = settings.width = 20;
         settings.spriteheight = settings.height = 14;
@@ -167,7 +167,8 @@ game.BulletEntity = me.Entity.extend({
 
         this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
         this.body.setCollisionMask(me.collision.types.NPC_OBJECT
-                | me.collision.types.ENEMY_OBJECT);
+                | me.collision.types.ENEMY_OBJECT
+                | me.collision.types.PLAYER_OBJECT);
 
         this.body.gravity = 0;
         this.owner = owner;
@@ -199,6 +200,8 @@ game.BulletEntity = me.Entity.extend({
                 break;*/
             case "custom":
                 this.body.vel = vel;
+                this.moodDamage = moodDamage;
+                this.moneyDamage = moneyDamage;
                 break;
             console.log(this.body.vel)
         }
@@ -223,8 +226,10 @@ game.BulletEntity = me.Entity.extend({
             response.b.hitPoints -= 1;
             console.log("Ouch! Enemy HP: " + response.b.hitPoints.toString());
         } else if (response.b.name == 'mainplayer' && this.owner == "enemy") {
+            me.game.world.removeChild(this);
             console.log("YOU GOT HIT!!!!")
-            game.data.stateManager.subDepression(0.5);
+            game.data.stateManager.subMoney(this.moneyDamage);
+            game.data.stateManager.subDepression(this.moodDamage);
         }
     }
 });
