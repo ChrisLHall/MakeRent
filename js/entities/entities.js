@@ -69,27 +69,31 @@ game.PlayerEntity = me.Entity.extend({
 
     keepInBounds: function() {
         if (this.left <= me.game.viewport.left) {
-            this.onBorder.set(1, 0);
+            this.onBorder.x = 1;
             this.pos.x = me.game.viewport.pos.x;
             this.body.vel.x = Math.max(this.body.vel.x,
                     game.data.gameplayManager.SCROLL_SPEED);
             this.updateBounds();
         } else if (this.right >= me.game.viewport.right) {
-            this.onBorder.set(-1, 0);
+            this.onBorder.x =  -1;
             this.body.vel.x = Math.min(this.body.vel.x, 0);
             this.pos.x = me.game.viewport.right - this.width;
             this.updateBounds();
+        } else {
+            this.onBorder.x = 0;
         }
         if (this.top <= me.game.viewport.top) {
-            this.onBorder.set(0, 1);
+            this.onBorder.y = 1;
             this.pos.y = me.game.viewport.pos.y;
             this.body.vel.y = Math.max(this.body.vel.y, 0);
             this.updateBounds();
         } else if (this.bottom >= me.game.viewport.bottom) {
-            this.onBorder.set(0, -1);
+            this.onBorder.y = -1;
             this.pos.y = me.game.viewport.bottom - this.height;
             this.body.vel.y = Math.min(this.body.vel.y, 0);
             this.updateBounds();
+        } else {
+            this.onBorder.y = 0;
         }
     },
 
