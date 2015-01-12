@@ -20,9 +20,16 @@ game.GameplayManager = me.Entity.extend({
         // TODO more testing
         // jk this absolutely does not work...ok now maybe?
         this.SCROLL_SPEED = 0.6;
-        this.body.vel.x = this.SCROLL_SPEED;
+        this.transition = false;
+        this.spawning = true;
+        this.enemyCount = 0;
+        this.spawnedEnemies = 0;
+        console.log(this.enemyCount)
+        this.body.vel.x = 0;
         me.timer.setTimeout(this.spawn.bind(this), 3000);
     },
+
+
 
     spawn: function() {
         var y1 = Math.floor(Math.random() * 15);
@@ -40,12 +47,31 @@ game.GameplayManager = me.Entity.extend({
         }
 
         var x = me.game.viewport.right;
-        me.game.world.addChild(new game.ObstacleEntity(x, y1 * 32));
-        me.game.world.addChild(new game.ObstacleEntity(x, y2 * 32));
-        me.game.world.addChild(new game.EnemyEntity(x, y3 * 32));
-        me.game.world.addChild(new game.EnemyEntity(x, y4 * 32));
+        if (this.transition) {
+            me.game.world.addChild(new game.ObstacleEntity(x, y1 * 32));
+            me.game.world.addChild(new game.ObstacleEntity(x, y2 * 32));
+        } else {
+            if (this.spawnedEnemies < 6 && this.spawning) {
+                me.game.world.addChild(new game.EnemyEntity(x, y3 * 32));
+            } else {
+                this.spawning = false;
+            }
+            if (this.enemyCount < 1) {
+                this.transition = true;
+                this.body.vel.x = 2;
+                me.timer.setTimeout(this.stopTransition.bind(this), 6000);
+            }
+        }
+        me.timer.setTimeout(this.spawn.bind(this), 1000);
+        
+    },
 
-        me.timer.setTimeout(this.spawn.bind(this), 3000);
+    stopTransition: function() {
+        console.log("help")
+        this.transition = false;
+        this.spawning = true;
+        this.spawnedEnemies = 0;
+        this.body.vel.x = 0;
     },
 
     /** Update the block's animation frame based on mood. Destroy it if it is

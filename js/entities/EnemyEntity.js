@@ -36,7 +36,8 @@ game.EnemyEntity = me.Entity.extend({
         this.flipX(true);
         this.canFire = true;
         this.lastFire = 0;
-
+        game.data.gameplayManager.enemyCount += 1;
+        game.data.gameplayManager.spawnedEnemies += 1;
         this.hitPoints = 3;
 
         this.SPEED = 2;
@@ -70,6 +71,7 @@ game.EnemyEntity = me.Entity.extend({
             me.game.world.addChild(money);
             this.alive = false;
             game.data.stateManager.addDepression(0.5);
+            game.data.gameplayManager.enemyCount -= 1;
         }
 
         if (this.canFire && game.data.playerPos) {

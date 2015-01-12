@@ -26,8 +26,8 @@ game.PlayScreen = me.ScreenObject.extend({
 
 
         // TODO REMOVE
-        me.game.world.addChild(new game.ObstacleEntity(300, 100));
-        me.game.world.addChild(new game.EnemyEntity(100, 120));
+        //me.game.world.addChild(new game.ObstacleEntity(300, 100));
+        //me.game.world.addChild(new game.EnemyEntity(100, 120));
 	},
 
 
