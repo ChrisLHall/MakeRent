@@ -34,8 +34,8 @@ game.EnemyEntity = me.Entity.extend({
         this.alwaysUpdate = true;
         this.body.gravity = 0;
         this.flipX(true);
-        this.canFire = true;
-        this.lastFire = 0;
+        this.canFire = false;
+        this.lastFire = me.timer.setTimeout(this.resetFire.bind(this), 500);
         game.data.gameplayManager.enemyCount += 1;
         game.data.gameplayManager.spawnedEnemies += 1;
         this.hitPoints = 3;
