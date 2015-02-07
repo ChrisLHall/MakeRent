@@ -74,7 +74,7 @@ game.GameplayManager = me.Entity.extend({
             me.game.world.addChild(new game.ObstacleEntity(x2, y2));
         } else {
             if (this.spawnedEnemies < 6 && this.spawning) {
-                me.game.world.addChild(new game.EnemyEntity(x1, y1));
+                me.game.world.addChild(new game.EnemyEntity(x1, y1, this.direction));
             } else {
                 this.spawning = false;
             }

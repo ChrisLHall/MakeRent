@@ -5,7 +5,7 @@ game.EnemyEntity = me.Entity.extend({
 
     
     /** Constructor for enemies. Settings is optional. */
-    init: function(x, y, settings) {
+    init: function(x, y, dir, settings) {
         // Default value for settings.
         settings = settings || {
                 width: 33,
@@ -39,9 +39,24 @@ game.EnemyEntity = me.Entity.extend({
         game.data.gameplayManager.enemyCount += 1;
         game.data.gameplayManager.spawnedEnemies += 1;
         this.hitPoints = 3;
-
         this.SPEED = 2;
-        this.changeDir([this.SPEED, 0]);
+        me.timer.setTimeout(this.changeDir.bind(this),
+                1000 + 500 * Math.random());
+        /*switch (dir) {
+            case "right":
+                this.changeDir([this.SPEED, 0]);
+                break;
+            case "left":
+                this.changeDir([-this.SPEED, 0]);
+                break;
+            case "up":
+                this.changeDir([0, -this.SPEED]);
+                break;
+            case "down":
+                this.changeDir([0, this.SPEED]);
+                break;
+        }
+        console.log(this.body.vel)*/
     },
 
     /** Collision event function, where E is the me.collision.ResponseObject. */
@@ -49,6 +64,7 @@ game.EnemyEntity = me.Entity.extend({
         if (e.b.name == "obstacle") {
             var vec = e.overlapV.clone().negateSelf();
             this.pos.add(vec);
+            this.changeDir(true)
             this.updateBounds();
         }
     },
@@ -86,7 +102,7 @@ game.EnemyEntity = me.Entity.extend({
         return true;
     },
 
-    changeDir: function(startSpeed) {
+    changeDir: function(notimer) {
         if (!this.alive) {
             return;
         }
@@ -99,15 +115,12 @@ game.EnemyEntity = me.Entity.extend({
                 [0, -this.SPEED]
                 ];
         var choice = [0, 0];
-        if (startSpeed) {
-            choice = startSpeed;
-        } else {
-            choice = directions[Math.floor(Math.random() * 4)];
-        }
+        choice = directions[Math.floor(Math.random() * 4)];
 
         //console.log("Change dir! alive = " + choice.toString());
         this.body.vel.x = choice[0];
         this.body.vel.y = choice[1];
+        if (notimer) return;
         return me.timer.setTimeout(this.changeDir.bind(this),
                 1000 + 500 * Math.random());
     },
@@ -115,7 +128,7 @@ game.EnemyEntity = me.Entity.extend({
     keepInBounds: function() {
         if (this.left < me.game.viewport.left) {
             this.pos.x = me.game.viewport.pos.x;
-            this.body.vel.x = game.data.gameplayManager.SCROLL_SPEED;
+            this.body.vel.x = this.SPEED;
             this.updateBounds();
         } else if (this.right > me.game.viewport.right) {
             //If off-screen to the right, just walk left
@@ -125,11 +138,11 @@ game.EnemyEntity = me.Entity.extend({
         }
         if (this.top < me.game.viewport.top) {
             this.pos.y = me.game.viewport.pos.y;
-            this.body.vel.y = 0;
+            this.body.vel.y = this.SPEED;
             this.updateBounds();
         } else if (this.bottom > me.game.viewport.bottom) {
             this.pos.y = me.game.viewport.bottom - this.height;
-            this.body.vel.y = 0;
+            this.body.vel.y = -this.SPEED;
             this.updateBounds();
         }
     }
