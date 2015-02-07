@@ -48,7 +48,7 @@ game.GameplayManager = me.Entity.extend({
                 var newvely = 0;
                 break;
             case "left":
-                var x1 = x2 = me.game.viewport.left;
+                var x1 = x2 = me.game.viewport.left - 32;
                 var y1 = r1 * 32 + me.game.viewport.top;
                 var y2 = r2 * 32 + me.game.viewport.top;
                 var newvelx = -2;
@@ -57,7 +57,7 @@ game.GameplayManager = me.Entity.extend({
             case "up":
                 var x1 = r1 * 43 + me.game.viewport.left;
                 var x2 = r2 * 43 + me.game.viewport.left;
-                var y1 = y2 = me.game.viewport.top;
+                var y1 = y2 = me.game.viewport.top - 32;
                 var newvelx = 0;
                 var newvely = -2;
                 break;

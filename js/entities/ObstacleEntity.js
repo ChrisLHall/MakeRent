@@ -62,6 +62,12 @@ game.ObstacleEntity = me.Entity.extend({
             // TODO: Destroy this
             updated = true;
         }
+        if (this.pos.x > me.game.viewport.right + this.width || 
+            this.pos.x < me.game.viewport.left  - this.width|| 
+            this.pos.y < me.game.viewport.top  - this.height|| 
+            this.pos.y > me.game.viewport.bottom + this.height) {
+            me.game.world.removeChild(this);
+        }
 
         // else inform the engine we did not perform
         // any update (e.g. position, animation)
