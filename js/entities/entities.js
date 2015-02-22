@@ -33,6 +33,7 @@ game.PlayerEntity = me.Entity.extend({
         this.body.onCollision = this.onCollision.bind(this);
 
         this.renderable.addAnimation("walk", [28, 29]);
+        this.renderable.addAnimation("fire", [42, 43, 44, 45, 46], 50);
         this.renderable.setCurrentAnimation("walk");
 
         // ensure the player is updated even when outside of the viewport
@@ -103,6 +104,7 @@ game.PlayerEntity = me.Entity.extend({
 
     ------ */
     update: function(dt) {
+
         if (me.input.isKeyPressed('left')) {
             // flip the sprite on horizontal axis
             this.flipX(true);
@@ -130,26 +132,34 @@ game.PlayerEntity = me.Entity.extend({
 
         // fire if ready and button pressed
         if (me.input.isKeyPressed('fireleft') && this.canFire) {
+            this.renderable.setCurrentAnimation("fire", "walk");
+            this.renderable.setAnimationFrame();
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "left", "player"));
+            me.game.world.addChild(new game.PlayerBullet(this.pos.x + 5, this.pos.y + 5, {}, "left"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
         } else if (me.input.isKeyPressed('fireright') && this.canFire) {
+            this.renderable.setCurrentAnimation("fire", "walk");
+            this.renderable.setAnimationFrame();
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "right", "player"));
+            me.game.world.addChild(new game.PlayerBullet(this.pos.x + 5, this.pos.y + 5, {}, "right"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
         } else if (me.input.isKeyPressed('fireup') && this.canFire) {
+            this.renderable.setCurrentAnimation("fire", "walk");
+            this.renderable.setAnimationFrame();
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "up", "player"));
+            me.game.world.addChild(new game.PlayerBullet(this.pos.x + 5, this.pos.y + 5, {}, "up"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
         } else if (me.input.isKeyPressed('firedown') && this.canFire) {
+            this.renderable.setCurrentAnimation("fire", "walk");
+            this.renderable.setAnimationFrame();
             me.timer.clearTimeout(this.lastFire);
-            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "down", "player"));
+            me.game.world.addChild(new game.PlayerBullet(this.pos.x + 5, this.pos.y + 5, {}, "down"));
             this.canFire = false;
             bullet = this;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 250);
@@ -159,7 +169,7 @@ game.PlayerEntity = me.Entity.extend({
         this.body.update(dt);
         var collided = me.collision.check(this, true, this.onCollision.bind(this), true);
 
-        if (this.body.vel.x != 0 || this.body.vel.y != 0) {
+        if (this.body.vel.x != 0 || this.body.vel.y != 0 || this.renderable.isCurrentAnimation("fire")) {
             this._super(me.Entity, 'update', [dt]);
         }
 
@@ -173,14 +183,7 @@ game.PlayerEntity = me.Entity.extend({
 
 /* Bullet Entity */
 game.BulletEntity = me.Entity.extend({
-    init: function(x, y, settings, dir, owner, vel, moneyDamage, moodDamage) {
-        if (owner == "player") {
-            settings.image = "bill_left";
-        } else {
-            settings.image = "enemybullet";
-        }
-        settings.spritewidth = settings.width = 20;
-        settings.spriteheight = settings.height = 14;
+    init: function(x, y, settings, dir, vel) {
         this._super(me.Entity, 'init', [x, y, settings]);
         this.body.addShape(new me.Rect(0, 0, this.width, this.height));
         this.z = 4;
@@ -191,40 +194,6 @@ game.BulletEntity = me.Entity.extend({
                 | me.collision.types.PLAYER_OBJECT);
 
         this.body.gravity = 0;
-        this.owner = owner;
-
-        switch (dir) {
-            case "right":
-                this.body.vel.x = 10;
-                break;
-            /*case "downright":
-                this.body.setVelocity(Math.sqrt(2), Math.sqrt(2));
-                break;*/
-            case "down":
-                this.body.vel.y = 10;
-                break;
-            /*case "downleft":
-                this.body.setVelocity(-1 * Math.sqrt(2), Math.sqrt(2));
-                break;*/
-            case "left":
-                this.body.vel.x = -10;
-                break;
-            /*case "upleft":
-                this.body.setVelocity(-1 * Math.sqrt(2), -1 * Math.sqrt(2));
-                break;*/
-            case "up":
-                this.body.vel.y = -10;
-                break;
-            /*case "upright":
-                this.body.setVelocity(Math.sqrt(2), -1 * Math.sqrt(2));
-                break;*/
-            case "custom":
-                this.body.vel = vel;
-                this.moodDamage = moodDamage;
-                this.moneyDamage = moneyDamage;
-                break;
-            console.log(this.body.vel)
-        }
     },
 
     update: function(dt) {
@@ -236,20 +205,8 @@ game.BulletEntity = me.Entity.extend({
             this.pos.y > me.game.viewport.bottom) {
             me.game.world.removeChild(this);
         }
+        this._super(me.Entity, 'update', [dt]);
         return true;
     },
 
-    collideHandler : function (response) {
-        if (response.b.name == 'enemy' && this.owner == "player") {
-            me.game.world.removeChild(this);
-            // TODO MAKE THIS WORK
-            response.b.hitPoints -= 1;
-            console.log("Ouch! Enemy HP: " + response.b.hitPoints.toString());
-        } else if (response.b.name == 'mainplayer' && this.owner == "enemy") {
-            me.game.world.removeChild(this);
-            console.log("YOU GOT HIT!!!!")
-            game.data.stateManager.subMoney(this.moneyDamage);
-            game.data.stateManager.subDepression(this.moodDamage);
-        }
-    }
 });
