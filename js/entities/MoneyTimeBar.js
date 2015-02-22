@@ -4,63 +4,72 @@ game.MoneyTimeBar = game.MoneyTimeBar || {};
 
 // TODO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-game.FancyText.String = me.ObjectContainer.extend({
-    /** Create a fancy string at position (x, y) with maximum length MAXLENGTH.
-     *  MAXLENGTH is the number of characters that will be created. */
-	init: function(x, y, maxLength) {
-		// call the constructor
-		this.parent(x, y);
-
-		// non collidable
-		this.collidable = false;
-
+game.MoneyTimeBar.Bar = me.ObjectContainer.extend({
+    /** Create a money bar at X, Y of LENGTH bar units (2 px each). */
+    init: function(x, y, length) {
+	// call the constructor
+	this.parent(x, y);
+	
+	// non collidable
+	this.collidable = false;
+	
         this.autoSort = false;
+	
+        this.length = length;
+	
+        this.units = [];
+        for (var i = 0; i < length; i++) {
+	    this.units[i] = new game.MoneyTimeBar.BarUnit(x + 2*i, y);
+	    this.addChild(this.units[i]);
 
-        this.length = maxLength;
-
-        this.characters = [];
-        for (var i = 0; i < maxLength; i++) {
-            this.characters[i] = new game.FancyText.Character(x + 8*i, y);
-            this.addChild(this.characters[i]);
+	    if (i == 0) {
+		this.units[i].makeFirst();
+	    } else if (i == length - 1) {
+		this.units[i].makeLast();
+	    }
         }
-	},
-
+    },
+    
     moveTo: function(x, y) {
         this.pos.set(x, y);
         for (var i = 0; i < this.length; i++) {
-            this.characters[i].pos.set(x + 8*i, y);
+            this.units[i].pos.set(x + 2*i, y);
         }
     },
 
-    setString: function(str) {
+    /** Set FRACTION (between 0.0 to 1.0) of the bar to be filled. */
+    setFraction: function(fraction) {
         for (var i = 0; i < this.length; i++) {
-            if (i < str.length) {
-                this.characters[i].setChar(str[i]);
+	    var thisFraction = i / this.length;
+            if (thisFraction <= fraction) {
+                this.units[i].setFilled(true);
             } else {
-                this.characters[i].setChar(" ");
+                this.unitss[i].setFilled(false);
             }
         }
     },
 });
 
-game.FancyText.Character = me.AnimationSheet.extend({
+game.MoneyTimeBar.BarUnit = me.AnimationSheet.extend({
     /** Creates a new fancytext character of type TYPE at position X, Y. */
-    init: function(x, y) {
-		this.parent(x, y, me.loader.getImage("yellowfont"), 8, 8);
-
+    init: function(x, y, index) {
+	this.parent(x, y, me.loader.getImage("yellowfont"), 8, 8); // TODO
+	
         this.floating = true;
-
-        this.character = " ";
-
-        var start = " ".charCodeAt(0);
-        var end = "~".charCodeAt(0);
-        for (var i = start; i <= end; i++) {
-            this.addAnimation(String.fromCharCode(i), [i - start]);
-        }
-        this.setCurrentAnimation(" ");
+	
+        this.filled = false;
+	
+        this.addAnimation("off", [1]);
+	this.addAnimation("on", [4]);
+	this.addAnimation("first_off", [0]);
+	this.addAnimation("first_on", [3]);
+	this.addAnimation("last_off", [2]);
+	this.addAnimation("last_on", [5]);
+        this.setCurrentAnimation("off");
     },
 
-    setChar: function(c) {
+    /** Sets whether this unit ISFILLED or is empty. */
+    setFilled: function(isFilled) { // TODO
         if (c != this.character) {
             this.character = c;
             this.setCurrentAnimation(c);
