@@ -58,7 +58,7 @@ game.MoneyTimeBar.BarUnit = me.AnimationSheet.extend({
     /** Creates a new time bar unit at position X, Y. FIRSTORLAST must be either
      * "first", "last", or undefined. */
     init: function (x, y) {
-        this.parent(x, y, me.loader.getImage("timebar"), 4, 6); // TODO
+        this._super(me.AnimationSheet, "init", [x, y, me.loader.getImage("timebar"), 4, 6]); // TODO
 	
         this.floating = true;
 	
