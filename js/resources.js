@@ -19,6 +19,8 @@ game.resources = [
     {name: "obstacles", type:"image", src: "data/img/obstacles.png"},
 
 	{name: "mood", type:"image", src: "data/img/mood.png"},
+    {name: "timebar", type:"image", src: "data/img/timeBar.png"},
+    {name: "timearrow", type:"image", src: "data/img/timeArrow.png"},
 	{name: "money-bag", type:"image", src: "data/img/money-bag.png"},
 
 	/* Atlases

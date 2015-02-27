@@ -27,6 +27,7 @@ game.HUD.Container = me.Container.extend({
 
 		// add our child score object at the top left corner
 		this.addChild(new game.HUD.EmotionIcon(20, 20));
+		this.addChild(new game.MoneyTimeBar.Bar(120, 20));
 	}
 });
 

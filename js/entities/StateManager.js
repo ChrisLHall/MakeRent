@@ -9,8 +9,17 @@ game.StateManager = me.Renderable.extend({
         this.player = null
     },
 
+    addMoney: function(amount) {
+        game.data.money = Math.max(0, game.data.money + amount);
+    },
+    
+    // TODO remove this blah
     subMoney: function(amount) {
         game.data.money = Math.max(0, game.data.money - amount);
+    },
+    
+    requiredRent: function () {
+        return game.data.requiredRent;
     },
 
     setPlayer: function(playerEntity) {

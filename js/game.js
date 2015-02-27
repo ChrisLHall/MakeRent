@@ -16,6 +16,7 @@ var game = {
 		DEPRESSION_TIME_CONST : 4.0,
 		DEPRESSION_THRESHOLD : 0.01,
 		money : 0,
+        requiredRent : 100,
 		job : "none",
 		incomeMult : 1.0
 	},
