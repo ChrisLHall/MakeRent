@@ -10,7 +10,7 @@ game.EnemyEntity = me.Entity.extend({
         settings = settings || {
                 width: 33,
                 height: 33,
-                image: "master",
+                image: "bossenemy",
                 name: "enemy",
                 spritewidth: 33,
                 spriteheight: 33
@@ -29,6 +29,7 @@ game.EnemyEntity = me.Entity.extend({
 
         this.renderable.addAnimation("walk", [0, 1]);
         this.renderable.setCurrentAnimation("walk");
+        this.renderable.addAnimation("fire", [2]);
 
         // ensure the player is updated even when outside of the viewport
         this.alwaysUpdate = true;
@@ -42,6 +43,7 @@ game.EnemyEntity = me.Entity.extend({
         this.SPEED = 2;
         me.timer.setTimeout(this.changeDir.bind(this),
                 1000 + 500 * Math.random());
+        this.walkcycle = 0;
         /*switch (dir) {
             case "right":
                 this.changeDir([this.SPEED, 0]);
@@ -74,6 +76,11 @@ game.EnemyEntity = me.Entity.extend({
         },
 
     update: function(dt) {
+        if (this.body.vel.x < 0) {
+            this.flipX(false);
+        } else if(this.body.vel.x > 0) {
+            this.flipX(true);
+        }
         this.keepInBounds();
         this.body.update(dt);
         var collided = me.collision.check(this, true,
@@ -82,6 +89,7 @@ game.EnemyEntity = me.Entity.extend({
         this._super(me.Entity, 'update', [dt]);
 
         if (this.hitPoints <= 0 && this.alive) {
+            me.timer.clearTimeout(this.walkcycle)
             me.game.world.removeChild(this);
             var money = new game.MoneyEntity(this.pos.x, this.pos.y, {})
             me.game.world.addChild(money);
@@ -93,13 +101,23 @@ game.EnemyEntity = me.Entity.extend({
         if (this.canFire && game.data.playerPos) {
             me.timer.clearTimeout(this.lastFire)
             test = new me.Vector2d(game.data.playerPos.x - this.pos.x, game.data.playerPos.y - this.pos.y)
-            me.game.world.addChild(new game.BulletEntity(this.pos.x + 5, this.pos.y + 5, {}, "custom", "enemy", test.normalize().scale(5), 1, .1));
-            this.canFire = false;
             bullet = this;
+            this.renderable.setCurrentAnimation("fire");
+            this.body.vel = new me.Vector2d(0,0);
+            this.walkcycle = me.timer.setTimeout(this.resumeWalk.bind(this), 500);
+            me.game.world.addChild(new game.EnemyBullet(this.pos.x + 5, this.pos.y + 5, {}, test.normalize().scale(5), 1, .1));
+            this.canFire = false;
             this.lastFire = me.timer.setTimeout(bullet.resetFire.bind(this), 1000 + 1000 * Math.random());
         }
 
         return true;
+    },
+
+    resumeWalk: function() {
+        if (this.alive) {
+            this.renderable.setCurrentAnimation("walk");
+        }
+        this.changeDir(true);
     },
 
     changeDir: function(notimer) {

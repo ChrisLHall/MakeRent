@@ -6,12 +6,13 @@ game.resources = [
 	 */
 
 	{name: "master", type:"image", src: "data/img/masterSpriteSheet.png"},
-	{name: "bill_left", type:"image", src: "data/img/bill_left.png"},
-	{name: "enemybullet", type:"image", src: "data/img/enemybullet.png"},
+	{name: "waterbullet", type:"image", src: "data/img/Water Bullet.png"},
+	{name: "enemybullet", type:"image", src: "data/img/BigbossBullet-Point.png"},
 	{name: "test-tileset", type:"image", src: "data/img/test-tileset.png"},
 	{name: "bg1", type:"image", src: "data/img/bg1.png"},
     {name: "collisionTiles", type:"image", src: "data/img/collisionTiles.png"},
 	{name: "none", type:"image", src: "data/img/none.png"},
+	{name: "bossenemy", type:"image", src: "data/img/BigBoss.png"},
 
 	{name: "gripe_run_right", type:"image", src: "data/img/gripe_run_right.png"},
     {name: "enemy_right", type:"image", src: "data/img/enemy_right.png"},
