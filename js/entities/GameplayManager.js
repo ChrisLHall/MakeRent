@@ -28,6 +28,8 @@ game.GameplayManager = me.Entity.extend({
         console.log(this.enemyCount)
         this.body.vel.x = 0;
         me.timer.setTimeout(this.spawn.bind(this), 3000);
+        this.can_pause = true;
+        this.updateWhenPaused = true;
     },
 
 
@@ -119,6 +121,28 @@ game.GameplayManager = me.Entity.extend({
         me.game.viewport.pos.x = this.pos.x;
         me.game.viewport.pos.y = this.pos.y;
         me.game.viewport.updateBounds();
+        console.log(this.can_pause)
+        if (me.input.isKeyPressed('pause') && this.can_pause) {
+            me.state.pause();
+            resume = setTimeout(function resume_loop() { 
+                loop = setInterval(function check_resume() { 
+                    if (me.input.isKeyPressed("pause")) {
+                        clearInterval(loop);
+                        me.state.resume();
+                        this.can_pause = false;
+                        pause = setTimeout(function enable_pause() {this.can_pause = true;}, 1000);
+                    }}, 100)}, 1000);
+            /*var resume_loop = setInterval(function check_resume() {
+                if (me.input.isKeyPressed("pause")) {
+                clearInterval(resume_loop);
+                me.state.resume();
+                this.can_pause = false;
+                console.log("here")
+                pause = setTimeout(function enable_pause() { this.can_pause = true;}, 1000);
+                }
+                }, 1000);*/
+            return true;
+        }
         return false;
     }
 });

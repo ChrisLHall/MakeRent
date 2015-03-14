@@ -76,6 +76,7 @@ var game = {
 		me.input.bindKey(me.input.KEY.DOWN, "firedown");
 		me.input.bindKey(me.input.KEY.LEFT, "fireleft");
 		me.input.bindKey(me.input.KEY.RIGHT, "fireright");
+		me.input.bindKey(me.input.KEY.ESC, "pause");
 		// Start the game.
 		me.state.change(me.state.PLAY);
 	}
