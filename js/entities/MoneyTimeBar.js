@@ -2,8 +2,6 @@
 
 game.MoneyTimeBar = game.MoneyTimeBar || {};
 
-// TODO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 game.MoneyTimeBar.Bar = me.Container.extend({
     /** Create a money bar at X, Y of LENGTH bar units (2 px each). */
     init: function(x, y, length) {
@@ -28,6 +26,9 @@ game.MoneyTimeBar.Bar = me.Container.extend({
                 this.units[i].makeLast();
             }
         }
+		
+		this.arrow = new game.MoneyTimeBar.Arrow(x, y + 8, this.length * 4);
+		this.addChild(this.arrow);
     },
     
     moveTo: function(x, y) {
@@ -35,30 +36,37 @@ game.MoneyTimeBar.Bar = me.Container.extend({
         for (var i = 0; i < this.length; i++) {
             this.units[i].pos.set(x + 4*i, y);
         }
+		this.arrow.moveTo(x, y);
     },
     
     update: function () {
+        this._super(me.Container, "update");
         this.setFraction(game.data.money / game.data.requiredRent);
+		this.setArrowFrac(0.5); // TODO TIMER
     },
 
     /** Set FRACTION (between 0.0 to 1.0) of the bar to be filled. */
-    setFraction: function(fraction) {
+    setFraction: function (fraction) {
         for (var i = 0; i < this.length; i++) {
-	    var thisFraction = i / this.length;
+			var thisFraction = i / this.length;
             if (thisFraction <= fraction) {
                 this.units[i].setFilled(true);
             } else {
-                this.unitss[i].setFilled(false);
+                this.units[i].setFilled(false);
             }
         }
     },
+	
+	setArrowFrac: function (fraction) {
+		this.arrow.setFraction(fraction);
+	},
 });
 
 game.MoneyTimeBar.BarUnit = me.AnimationSheet.extend({
     /** Creates a new time bar unit at position X, Y. FIRSTORLAST must be either
      * "first", "last", or undefined. */
     init: function (x, y) {
-        this._super(me.AnimationSheet, "init", [x, y, me.loader.getImage("timebar"), 4, 6]); // TODO
+        this._super(me.AnimationSheet, "init", [x, y, {image: me.loader.getImage("timebar"), spritewidth: 4, spriteheight: 8}]);
 	
         this.floating = true;
 	
@@ -79,7 +87,7 @@ game.MoneyTimeBar.BarUnit = me.AnimationSheet.extend({
         this.firstOrLast = "first_";
     },
     
-    makeFirst: function () {
+    makeLast: function () {
         this.firstOrLast = "last_";
     },
     
@@ -91,5 +99,36 @@ game.MoneyTimeBar.BarUnit = me.AnimationSheet.extend({
         }
         
         this.setCurrentAnimation(this.firstOrLast + animStr);
+    },
+});
+
+game.MoneyTimeBar.Arrow = me.AnimationSheet.extend({
+    /** Creates a new time bar unit at position X, Y. LENGTHPIXELS is the
+	 * length of the whole bar. */
+    init: function (x, y, lengthPixels) {
+        this._super(me.AnimationSheet, "init", [x, y, {image: me.loader.getImage("timearrow"), spritewidth: 8, spriteheight: 8}]);
+	
+        this.floating = true;
+		
+		this.originalPos = {x: x, y: y};
+		this.currentFraction = 0;
+		this.lengthPixels = lengthPixels;
+		
+		this.anchorPoint = new me.Vector2d(0.5, 0.5);
+	
+        this.addAnimation("arrow", [0]);
+        this.setCurrentAnimation("arrow");
+    },
+	
+	moveTo: function(x, y) {
+		this.originalPos.x = x;
+		this.originalPos.y = y;
+        this.setFraction(this.currentFraction);
+    },
+    
+    /** Sets whether this unit ISFILLED or is empty. */
+    setFraction: function (fraction) {
+		this.currentFraction = this.fraction;
+        this.pos.set(this.originalPos.x + this.lengthPixels * fraction, this.originalPos.y);
     },
 });
